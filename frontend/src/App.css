@@ -1,0 +1,191 @@
+:root {
+  --german-blue: #003366;
+  --success-green: #00b894;
+  --danger-red: #d63031;
+  --bg-light: #f4f7f6;
+}
+
+.park-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  background-color: var(--bg-light);
+  min-height: 100vh;
+}
+
+.park-header {
+  background: var(--german-blue);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.p-sign {
+  background: #fff;
+  color: var(--german-blue);
+  font-weight: 900;
+  font-size: 2rem;
+  padding: 5px 15px;
+  border-radius: 4px;
+}
+
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 5px solid var(--german-blue);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #636e72;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2d3436;
+}
+
+.stat-value.success { color: var(--success-green); }
+.stat-value.warning { color: #fdcb6e; }
+
+.alert {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+.alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+/* --- Garage Floor --- */
+.garage-floor {
+  background-color: #34495e; /* Dark Asphalt Grey */
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+  margin-top: 20px;
+}
+
+.parking-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 15px;
+}
+
+/* --- Slot Container --- */
+.slot-container {
+  position: relative;
+  height: 120px;
+  background-color: #2c3e50; /* Slightly lighter asphalt */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.slot-id-label {
+  position: absolute;
+  top: 5px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+/* Lane Lines */
+.lane-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: rgba(255, 255, 255, 0.5); /* White parking lines */
+}
+.lane-line.left { left: 0; }
+.lane-line.right { right: 0; }
+
+/* Status Indicators */
+.slot-container.free {
+  border-bottom: 4px solid #00b894; /* German Traffic Green */
+}
+.slot-container.occupied {
+  border-bottom: 4px solid #d63031; /* Signal Red */
+}
+
+/* --- Top-Down Car Silhouette --- */
+.car-top-view {
+  width: 40px;
+  height: 80px;
+  background-color: #ecf0f1; /* Professional Silver/White Car */
+  border-radius: 6px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.windshield-front {
+  width: 30px;
+  height: 15px;
+  background-color: #34495e;
+  margin-top: 10px;
+  border-radius: 2px;
+}
+
+.windshield-rear {
+  width: 30px;
+  height: 8px;
+  background-color: #34495e;
+  margin-top: auto;
+  margin-bottom: 8px;
+  border-radius: 2px;
+}
+
+/* --- German License Plate Look --- */
+.german-plate {
+  background: white;
+  color: black;
+  font-family: 'Monaco', monospace;
+  font-size: 0.55rem;
+  font-weight: bold;
+  padding: 1px 3px;
+  border: 1px solid #000;
+  border-radius: 2px;
+  margin-top: 10px;
+  text-align: center;
+  width: 80%;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+} 
