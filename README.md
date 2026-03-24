@@ -20,7 +20,7 @@ Features
 - Real time slot allocation
 - Queue processing with Kafka
 - Parking visualization UI
-EOF
+
 
 echo "✅ Project created successfully!"
 echo ""
