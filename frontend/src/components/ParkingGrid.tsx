@@ -1,24 +1,3 @@
-/*import React from "react";
-import ParkingSlot from "./ParkingSlot";
-import { ParkingSlotType } from "../types/Parking";
-
-interface Props {
-  slots: ParkingSlotType[];
-}
-
-const ParkingGrid: React.FC<Props> = ({ slots }) => {
-  return (
-    <div className="grid">
-      {slots.map((slot) => (
-        <ParkingSlot key={slot.id} slot={slot} />
-      ))}
-    </div>
-  );
-};
-
-export default ParkingGrid;*/
-
-
 import React from "react";
 import ParkingSlot from "./ParkingSlot";
 import { ParkingSlotType } from "../types/Parking";

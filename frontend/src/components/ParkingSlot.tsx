@@ -1,27 +1,3 @@
-/*import React from "react";
-import { ParkingSlotType } from "../types/Parking";
-import "../App.css";
-
-interface Props {
-  slot: ParkingSlotType;
-}
-
-const ParkingSlot: React.FC<Props> = ({ slot }) => {
-  return (
-    <div className={`slot ${slot.status.toLowerCase()}`}>
-      <div className="car">
-        <div className="roof"></div>
-        <div className="window"></div>
-        <div className="wheel left"></div>
-        <div className="wheel right"></div>
-        {slot.carNumber && <span className="plate">{slot.carNumber}</span>}
-      </div>
-    </div>
-  );
-};
-
-export default ParkingSlot; */
-
 import React from "react";
 import { ParkingSlotType } from "../types/Parking";
 import "../App.css";

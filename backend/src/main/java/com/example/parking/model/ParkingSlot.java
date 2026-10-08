@@ -1,7 +1,7 @@
 package com.example.parking.model;
 
 import jakarta.persistence.*;
-import com.example.parking.model.Car;
+
 @Entity
 @Table(name = "parking_slots")
 public class ParkingSlot {
@@ -9,6 +9,14 @@ public class ParkingSlot {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	private int slotNumber;
 
@@ -22,6 +30,11 @@ public class ParkingSlot {
 	// --- The Enum Definition ---
 	public enum Status {
 		FREE, IN_PROCESS, OCCUPIED
+	}
+
+
+	public ParkingSlot() {
+		// TODO Auto-generated constructor stub
 	}
 
 	// Getters and Setters...
