@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -116,7 +118,6 @@ public class ParkingControllerTest {
 	@DisplayName("Should enter the car in batch")
 	void testEnterBatch() {
 		CarRequest carRequest =  new CarRequest();
-		
 		List<String> carNumbers = new ArrayList<>();
 		carNumbers.add("JS-RK0000");
 		carNumbers.add("JS-RK9999");
@@ -124,31 +125,46 @@ public class ParkingControllerTest {
 		
 		carRequest.setCarNumbers(carNumbers);
 		String actualResult =parkingController.enterCarsBatch(carRequest);
-		
 		verify(kafkaProduecerMock, times(3)).sendCar(any());
-		
 		assertEquals("3 cars sent to Kafka queue.", actualResult);
 
 	}
 	
-	/*@Test
-	@DisplayName("Should enter the car in batch")
-	void testEnterBatchSuccess() {
-		CarRequest carRequest= new CarRequest();
-		carRequest = null;
-		parkingController.enterCarsBatch(carRequest);
-		assertEquals("No car numbers provided", "No car numbers provided");
+	@Test
+	@DisplayName("Should return warning message and NEVER call Kafka when list is empty")
+	void testEnterCarsBatch_EmptyList() {
+	    CarRequest carRequest = new CarRequest();
+	    carRequest.setCarNumbers(new ArrayList<>());
+	    String result = parkingController.enterCarsBatch(carRequest);
+	    assertEquals("No car numbers provided.", result);
+	    verify(kafkaProduecerMock, never()).sendCar(anyString());
 	}
-	
 	
 	@Test
 	@DisplayName("Should enter the car in batch")
-	void testEnterBatchFailed() {
+	void testEnterBatchSucceed() {
 		CarRequest carRequest= new CarRequest();
-		carRequest = null;
+
+		List<String> carNumbers = new ArrayList<>();
+		carNumbers.add("JS-RK0000");
+		carNumbers.add("JS-RK9999");
+		carNumbers.add("JS-RK8888");
+		
+		carRequest.setCarNumbers(carNumbers);
+		
+		String expectedResult  = "3 cars sent to Kafka queue.";
+		
 		parkingController.enterCarsBatch(carRequest);
-		assertEquals("No car numbers provided", "No car numbers provided");
-	}*/
+		
+	    verify(kafkaProduecerMock, times(1)).sendCar("JS-RK0000");
+	    verify(kafkaProduecerMock, times(1)).sendCar("JS-RK9999");
+	    verify(kafkaProduecerMock, times(1)).sendCar("JS-RK8888");
+
+	    verify(kafkaProduecerMock, times(3)).sendCar(anyString());
+
+	    assertEquals("3 cars sent to Kafka queue.", expectedResult);
+		
+	}
 
 	@Test
 	@DisplayName("Should send carRequest object to kafka producer")
@@ -159,6 +175,4 @@ public class ParkingControllerTest {
 	}
 	
 	
-
-
 }
