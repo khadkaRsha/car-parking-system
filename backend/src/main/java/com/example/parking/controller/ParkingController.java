@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.parking.dto.CarRequest;
 import com.example.parking.dto.ParkingSlotDto;
 import com.example.parking.kafka.KafkaProducer;
+import com.example.parking.model.ParkingSession;
+import com.example.parking.repository.ParkingSessionRepository;
 import com.example.parking.repository.ParkingSlotRepository;
 
 @RestController
@@ -26,8 +29,8 @@ public class ParkingController {
     private KafkaProducer producer;
     @Autowired
     private ParkingSlotRepository slotRepo;
-    private ParkingSlotDto ParkingSlotDto;
-
+    @Autowired
+    private ParkingSessionRepository parkingSessionRepository;
     @PostMapping("/enter")
     public String enterCar(@RequestBody CarRequest request) {
         producer.sendCar(request.getCarNumber());
@@ -64,4 +67,10 @@ public class ParkingController {
                 })
                 .collect(Collectors.toList());
     }
+    
+    @GetMapping("/details/{car_number}")
+    public List<ParkingSession> getCarDetails(@PathVariable String carNumber) {
+     return parkingSessionRepository.findCarDetails(carNumber);
+    }
+    
 }

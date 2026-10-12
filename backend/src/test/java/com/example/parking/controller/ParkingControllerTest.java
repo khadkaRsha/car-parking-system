@@ -25,8 +25,10 @@ import com.example.parking.dto.CarRequest;
 import com.example.parking.dto.ParkingSlotDto;
 import com.example.parking.kafka.KafkaProducer;
 import com.example.parking.model.Car;
+import com.example.parking.model.ParkingSession;
 import com.example.parking.model.ParkingSlot;
 import com.example.parking.model.ParkingSlot.Status;
+import com.example.parking.repository.ParkingSessionRepository;
 import com.example.parking.repository.ParkingSlotRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,6 +42,9 @@ public class ParkingControllerTest {
 	
 	@Mock
 	ParkingSlotRepository parkingSlotRepository;
+	
+	@Mock
+	ParkingSessionRepository parkingSessionRepository;
 	
 	CarRequest carRequest;
 	
@@ -174,5 +179,29 @@ public class ParkingControllerTest {
 
 	}
 	
-	
+	@Test
+	void testGetCarDetails() {
+		String carNumber = "JS-RK8888";
+	    
+	    Car car = new Car();
+	    car.setCarNumber(carNumber);
+
+	    ParkingSession parkingSession = new ParkingSession();
+	    parkingSession.setId(1L);
+	    parkingSession.setCar(car);
+
+	    // 2. Stub the repository to return our mock list when queried
+	    when(parkingSessionRepository.findCarDetails(carNumber))
+	        .thenReturn(List.of(parkingSession));
+
+	    // 3. When: Call the controller method
+	    List<ParkingSession> result = parkingController.getCarDetails(carNumber);
+
+	    // 4. Then: Assert the output data from the "table/result"
+	    assertNotNull(result);
+	    assertEquals(1, result.size());
+	    assertEquals("JS-RK8888", result.get(0).getCar().getCarNumber());
+
+	}
+
 }
