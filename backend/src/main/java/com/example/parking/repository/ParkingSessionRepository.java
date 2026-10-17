@@ -11,8 +11,10 @@ import com.example.parking.model.ParkingSession;
 @Repository
 public interface ParkingSessionRepository extends JpaRepository<ParkingSession, Long> {
 	// Spring automatically joins Car and matches the carNumber string!
-    List<ParkingSession> findCarDetails(String carNumber);
-	
+    List<ParkingSession> findByCarCarNumber(String carNumber);
     // Find if a car currently has an active open parking session
-    Optional<ParkingSession> findByCarIdAndExitTimeIsNull(Long carId);
+    
+    Optional<ParkingSession> findBySlotIdAndExitTimeIsNull(Long slotId);
+    
+    List<ParkingSession> findByCarCarNumberContainingIgnoreCase(String carNumber);
 }

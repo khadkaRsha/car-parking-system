@@ -29,6 +29,38 @@ export const getInitialData = async (): Promise<
   }
 };
 
+export async function searchParkingHistory(carNumber: string) {
+  try {
+    const res = await fetch(`${BASE_URL}/search/${encodeURIComponent(carNumber)}`);
+    if (!res.ok) {
+      if (res.status === 404) return [];
+      throw new Error("Failed to fetch search results");
+    }
+    return await res.json();
+  } catch (err) {
+    console.error("Search error:", err);
+    return [];
+  }
+}
+
+/**
+ * Remove a car from the parking
+ * Gracefully handles non-JSON or HTML responses.
+ */
+export async function exitParking(slotId: number): Promise<string> {
+  const response = await fetch(`/api/parking/exit/${slotId}`, {
+    method: "POST",
+  });
+
+  const text = await response.text();
+
+  if (!response.ok) {
+    throw new Error(text || "Failed to process car exit");
+  }
+
+  return text;
+}
+
 /**
  * Enter a car into the parking.
  * Gracefully handles non-JSON or HTML responses.

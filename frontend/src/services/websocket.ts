@@ -8,7 +8,10 @@ let stompClient: Client | null = null;
  * Calls onMessage(data) when a valid JSON message is received
  */
 export const connectWebSocket = (onMessage: (data: any) => void) => {
-  const socket = new SockJS("/ws"); // Proxy forwards to backend /ws
+  //const socket = new SockJS("/ws"); // Proxy forwards to backend /ws
+
+  const socket = new SockJS("/http://localhost:8080/ws"); // Proxy forwards to backend /ws
+
   stompClient = new Client({
     webSocketFactory: () => socket,
     debug: (str) => console.log("STOMP:", str),

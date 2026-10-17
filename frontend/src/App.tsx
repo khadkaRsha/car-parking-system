@@ -54,38 +54,15 @@ const App: React.FC = () => {
       {/* Professional Header Section */}
       <header className="park-header">
         <div className="header-brand">
-          <span className="p-sign">P</span>
-          <h1>Parkleitsystem</h1>
-        </div>
-        
-        <div className="header-controls">
-          <ParkingForm onSuccess={fetchData} />
+          <span className="p-sign"></span>
+          <h1></h1>
         </div>
       </header>
 
       {/* Stats Dashboard */}
-      <div className="stats-container">
-        <div className="stat-card">
-          <span className="stat-label">Verfügbar (Available)</span>
-          <span className={`stat-value ${available < 5 ? 'warning' : 'success'}`}>
-            {available} / {stats.total}
-          </span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-label">Warteschlange (Queue)</span>
-          <span className="stat-value">{stats.queue}</span>
-        </div>
-      </div>
 
-      {/* Dynamic Status Alerts */}
-      <div className="status-alerts">
-        {available === 1 && (
-          <div className="alert alert-warning">⚠️ Nur noch 1 Stellplatz frei!</div>
-        )}
-        {available === 0 && (
-          <div className="alert alert-danger">🚫 Parkhaus Belegt (Full)</div>
-        )}
-      </div>
+      {/* Dynamic Status Alerts - display stat alert*/}
+
 
       <ParkingGrid slots={slots} />
     </div>

@@ -2,9 +2,11 @@ export type ParkingStatus = "FREE" | "IN_PROCESS" | "OCCUPIED";
 
 export interface ParkingSlotType {
   id: number;
-  slotNumber: number;
+  slotNumber?: number; //
   status: ParkingStatus;
   carNumber?: string;
+  entryTime?: string;
+  fee?: number;
 }
 
 export interface ParkingStats {

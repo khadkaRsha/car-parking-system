@@ -186,12 +186,20 @@ public class ParkingControllerTest {
 	    Car car = new Car();
 	    car.setCarNumber(carNumber);
 
+
 	    ParkingSession parkingSession = new ParkingSession();
 	    parkingSession.setId(1L);
 	    parkingSession.setCar(car);
+	    parkingSession.setSlot(parkingSlot);
+	    
+	    
+		parkingSlot.setId(50L);
+		parkingSlot.setSlotNumber(5);
+		parkingSlot.setCar(carModel);
+		parkingSlot.setStatus(Status.OCCUPIED);
 
 	    // 2. Stub the repository to return our mock list when queried
-	    when(parkingSessionRepository.findCarDetails(carNumber))
+	    when(parkingSessionRepository.findByCarCarNumber(carNumber))
 	        .thenReturn(List.of(parkingSession));
 
 	    // 3. When: Call the controller method
@@ -201,7 +209,8 @@ public class ParkingControllerTest {
 	    assertNotNull(result);
 	    assertEquals(1, result.size());
 	    assertEquals("JS-RK8888", result.get(0).getCar().getCarNumber());
-
+	    assertEquals(5, result.get(0).getSlot().getSlotNumber());
+	    assertEquals(Status.OCCUPIED, result.get(0).getSlot().getStatus());
 	}
 
 }

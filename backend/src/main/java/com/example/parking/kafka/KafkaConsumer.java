@@ -1,11 +1,16 @@
 package com.example.parking.kafka;
 
 import com.example.parking.model.Car;
+import com.example.parking.model.ParkingSession;
 import com.example.parking.model.ParkingSlot;
 import com.example.parking.repository.CarRepository;
+import com.example.parking.repository.ParkingSessionRepository;
 import com.example.parking.repository.ParkingSlotRepository;
 
 import jakarta.transaction.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,6 +21,9 @@ public class KafkaConsumer {
 
     @Autowired
     private ParkingSlotRepository slotRepo;
+    
+    @Autowired
+    private ParkingSessionRepository parkingSessionRepository;
 
     @Autowired
     private CarRepository carRepo;
@@ -37,13 +45,22 @@ public class KafkaConsumer {
             return;
         }
 
-        // 3. Find a FREE slot and update it
+     // 3. Find a FREE slot and update it
         slotRepo.findFirstByStatus(ParkingSlot.Status.FREE)
             .ifPresentOrElse(slot -> {
                 slot.setCar(car);
                 slot.setStatus(ParkingSlot.Status.OCCUPIED);
-                slotRepo.save(slot); // Explicitly save the slot
-                System.out.println("SUCCESS: Slot " + slot.getSlotNumber() + " assigned to " + carNumber);
+                slotRepo.save(slot); // Save the slot update
+
+                // 4. CREATE & SAVE THE PARKING SESSION
+                ParkingSession session = new ParkingSession();
+                session.setCar(car);
+                session.setSlot(slot);
+                session.setEntryTime(LocalDateTime.now());
+                session.setFee(BigDecimal.ZERO);
+                parkingSessionRepository.save(session);
+
+                System.out.println("SUCCESS: Slot " + slot.getSlotNumber() + " assigned to " + carNumber + " and parking session recorded.");
             }, () -> {
                 System.out.println("FAILED: No free slots available for " + carNumber);
             });

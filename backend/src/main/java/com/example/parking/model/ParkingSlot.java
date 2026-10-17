@@ -23,9 +23,11 @@ public class ParkingSlot {
 	@Enumerated(EnumType.STRING) // This saves "FREE" or "OCCUPIED" as text in DB
 	private Status status;
 
-	@OneToOne // Changed to OneToOne because one slot holds one car
-    @JoinColumn(name="car_id")
-    private Car car;
+	
+	// Remove cascade and orphanRemoval because the Car record must persist independently of the slot
+	@OneToOne
+	@JoinColumn(name = "car_id", nullable = true)
+	private Car car;
 
 	// --- The Enum Definition ---
 	public enum Status {

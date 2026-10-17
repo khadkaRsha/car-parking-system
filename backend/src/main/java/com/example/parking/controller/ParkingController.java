@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.parking.dto.CarRequest;
@@ -19,10 +23,13 @@ import com.example.parking.kafka.KafkaProducer;
 import com.example.parking.model.ParkingSession;
 import com.example.parking.repository.ParkingSessionRepository;
 import com.example.parking.repository.ParkingSlotRepository;
+import com.example.parking.service.ParkingService;
+
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/parking")
+@Transactional(readOnly = true)
 public class ParkingController {
 
     @Autowired
@@ -31,6 +38,9 @@ public class ParkingController {
     private ParkingSlotRepository slotRepo;
     @Autowired
     private ParkingSessionRepository parkingSessionRepository;
+    @Autowired
+    private ParkingService parkingService; // 
+    
     @PostMapping("/enter")
     public String enterCar(@RequestBody CarRequest request) {
         producer.sendCar(request.getCarNumber());
@@ -69,8 +79,30 @@ public class ParkingController {
     }
     
     @GetMapping("/details/{car_number}")
-    public List<ParkingSession> getCarDetails(@PathVariable String carNumber) {
-     return parkingSessionRepository.findCarDetails(carNumber);
+    public List<ParkingSession> getCarDetails(@PathVariable("car_number") String carNumber) {
+        return parkingSessionRepository.findByCarCarNumber(carNumber);
+    }
+    
+
+    @PostMapping("/exit/{slotId}")
+    public ResponseEntity<String> exitCar(@PathVariable("slotId") Long slotId) {
+        try {
+            parkingService.exitCar(slotId);
+            return ResponseEntity.ok("Car successfully removed from slot.");
+        } catch (Exception e) {
+            e.printStackTrace(); // PRINT EXACT JAVA STACKTRACE TO CONSOLE
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Exit failed: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/search/{carNumber}")
+    public ResponseEntity<List<ParkingSession>> searchCar(@PathVariable("carNumber") String carNumber) {
+        List<ParkingSession> sessions = parkingSessionRepository.findByCarCarNumberContainingIgnoreCase(carNumber.trim());
+        if (sessions.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(sessions);
     }
     
 }

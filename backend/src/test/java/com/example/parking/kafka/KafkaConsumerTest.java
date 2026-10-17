@@ -7,6 +7,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -17,9 +19,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import com.example.parking.model.Car;
+import com.example.parking.model.ParkingSession;
 import com.example.parking.model.ParkingSlot;
 import com.example.parking.model.ParkingSlot.Status;
 import com.example.parking.repository.CarRepository;
+import com.example.parking.repository.ParkingSessionRepository;
 import com.example.parking.repository.ParkingSlotRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,16 +38,18 @@ public class KafkaConsumerTest {
     ParkingSlotRepository parkingSlotRepository;
 	@Mock
     CarRepository carRepository;
+	@Mock
+	ParkingSessionRepository parkingSessionRepository;
 
 
 	@Test
-	public void testConsumeCarCreate() {
-		Car carMock = new Car();
-		carMock.setCarNumber("RK-JES1122");
-		
-		String carNumber = "RK-JES1122";
-		
-		ParkingSlot parkingSlotModel = new ParkingSlot();
+    public void testConsumeCarCreate() {
+        Car carMock = new Car();
+        carMock.setCarNumber("RK-JES1122");
+        
+        String carNumber = "RK-JES1122";
+        
+        ParkingSlot parkingSlotModel = new ParkingSlot();
         parkingSlotModel.setId(50L);
         parkingSlotModel.setSlotNumber(5);
         parkingSlotModel.setCar(carMock);
@@ -58,13 +64,14 @@ public class KafkaConsumerTest {
 
         verify(carRepository, times(1)).findByCarNumber(carNumber);
         verify(parkingSlotRepository, times(1)).existsByCar(carMock);
-        
         verify(parkingSlotRepository, times(1)).findFirstByStatus(ParkingSlot.Status.FREE);
         verify(parkingSlotRepository, times(1)).save(parkingSlotModel);
+        
+        verify(parkingSessionRepository, times(1)).save(any(ParkingSession.class));
 
         assertEquals(ParkingSlot.Status.OCCUPIED, parkingSlotModel.getStatus());
-        assertEquals(carMock, parkingSlotModel.getCar());	
-	}
+        assertEquals(carMock, parkingSlotModel.getCar());    
+    }
 	
 	@Test
 	public void consumeCar_GarageFull_SlotNotSaved() {
