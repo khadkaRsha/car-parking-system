@@ -68,7 +68,17 @@ export default function ParkingGrid({ slots: propSlots, onRefresh }: Props) {
   };
 
   // Basic Exit / Remove Operation with instant grid re-fetch
-const handleExitCar = async (slotId: number, carNumber?: string) => {
+  const handleExitCar = async (slotId: number, carNumber?: string) => {
+    const vehicleText = carNumber ? `vehicle (${carNumber})` : "this vehicle";
+    const isConfirmed = window.confirm(
+      `Are you sure you want to check out ${vehicleText}?.`
+    );
+
+    // 2. If user clicks "Cancel", stop execution here
+    if (!isConfirmed) {
+      return;
+    }
+
     try {
       await exitParking(slotId);
       setActiveSlot(null);
@@ -81,6 +91,7 @@ const handleExitCar = async (slotId: number, carNumber?: string) => {
       alert(err.message || "Failed to process exit");
     }
   };
+  
 
   const handleSearchHistory = async (e: React.FormEvent) => {
     e.preventDefault();
