@@ -90,7 +90,7 @@ public class ParkingService {
             try {
                 session.setFee(calculateParkingFee(entryTime, now));
             } catch (Exception e) {
-                session.setFee(BigDecimal.ZERO); // Fallback fee if calculation fails
+                session.setFee(BigDecimal.ZERO); 
             }
             parkingSessionRepository.saveAndFlush(session);
         }

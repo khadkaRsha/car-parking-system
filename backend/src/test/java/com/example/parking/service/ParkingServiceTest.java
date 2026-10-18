@@ -68,6 +68,8 @@ public class ParkingServiceTest {
 		parkingSession.setId(1L);
 		parkingSession.setCar(carModel);
 		parkingSession.setSlot(parkingSlot);
+		
+
 
 	}
 
@@ -182,21 +184,34 @@ public class ParkingServiceTest {
         verify(parkingSessionRepository, never()).saveAndFlush(any());
     }
 
-    @Test
+	@Test
     void testExitCar_OccupiedWithActiveSession() {
+        parkingSession.setExitTime(null);
+        LocalDateTime beforeExecution = LocalDateTime.now();
+
         when(parkingSlotRepository.findById(1L)).thenReturn(Optional.of(parkingSlot));
         when(parkingSessionRepository.findBySlotIdAndExitTimeIsNull(1L)).thenReturn(Optional.of(parkingSession));
+        
         parkingServiceMock.exitCar(1L);
         
+        LocalDateTime afterExecution = LocalDateTime.now();
+
         assertNotNull(parkingSession.getExitTime());
         assertNotNull(parkingSession.getFee());
+        
+        assertTrue(
+            !parkingSession.getExitTime().isBefore(beforeExecution) && 
+            !parkingSession.getExitTime().isAfter(afterExecution),
+            "Exit time should be generated during service execution"
+        );
+        
         assertEquals(ParkingSlot.Status.FREE, parkingSlot.getStatus());
         assertNull(parkingSlot.getCar());
 
         verify(parkingSessionRepository).saveAndFlush(parkingSession);
         verify(parkingSlotRepository).saveAndFlush(parkingSlot);
     }
-
+	
     @Test
     void testExitCar_OccupiedWithoutActiveSession() {
         when(parkingSlotRepository.findById(1L)).thenReturn(Optional.of(parkingSlot));
