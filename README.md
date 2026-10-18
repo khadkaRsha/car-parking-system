@@ -33,3 +33,11 @@ echo "4) docker compose up -d"
 
 <img width="1276" height="717" alt="image" src="https://github.com/user-attachments/assets/7f828c86-5263-425c-b71a-cfbb251af863" />
 
+<img width="1459" height="571" alt="image" src="https://github.com/user-attachments/assets/6bf6e058-9203-4c14-a14c-b273e1ee4e49" />
+
+<img width="1466" height="752" alt="image" src="https://github.com/user-attachments/assets/f24916e5-a529-48a1-97cc-cf50bf84e515" />
+
+
+
+
+
